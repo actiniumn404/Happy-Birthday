@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Happy Birthday </title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.3.3/dist/confetti.browser.min.js"></script>
+  </head>
+  <style>
+    .centered{
+      position: absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%);
+    }
+    html{
+      text-align:center;
+      background-color:black;
+      }
+      body{padding:0px;margin:0px;}
+    .button {
+      left:45vw;
+      padding: 15px 25px;
+      font-size: 24px;
+      text-align: center;
+      cursor: pointer;
+      outline: none;
+      color: #fff;
+      background-color: #04AA6D;
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 9px #999;
+    }
+
+    .button:hover {background-color: #3e8e41}
+
+    .button:active {
+      background-color: #3e8e41;
+      box-shadow: 0 5px #666;
+      transform: translateY(4px);
+    }
+    @keyframes fade{
+      0%{box-shadow:0px 0px 16px white;}
+      50%{box-shadow:0px 0px 0px white;}
+      100%{box-shadow:0px 0px 16px white;}
+    }
+    @keyframes flashin{
+      from{height:0px;width:0px;}
+      to{height:100vh;width:100vw;}
+    }
+    @keyframes flashout{
+      from{height:100vh;width:100vw;}
+      to{height:0px;width:0px;}
+    }
+    .flashin{
+      height:100vh;width:100vw;
+      animation:flashin 0.2s 1;
+    }
+    .flashout{
+      height:0px;width:0px;
+      animation:flashout 0.2s 1;
+    }
+    #flash{
+      z-index:10000000;
+      background-color:whitesmoke;
+    }
+  </style>
+  <body>
+    <script src="script.js"></script>
+    <div id="preempt">
+      <button class="button centeredcon" style="position:absolute;top:50vh;z-index:100;" onclick="flash_it()">Click to open</button>
+      <img src="/gift.png" class="centered" height="500px;">
+    </div>
+    <div id="flash" class="centered"></div>
+    <div id="postempt" style="display:none;">
+      <img src="/banner.png">
+      <h1 class="centered" style="color:white;font-size:60px;">Happy birthday <span id="name">Name goes here</span>!!!</h1>
+      <h2 class="centered" id="msg" style="color:gray;font-size:36px;top:60vh;"></h2
+    </div>
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const namme = urlParams.get("name")
+      const message = urlParams.get("msg")
+      document.getElementById("name").innerHTML = namme
+      document.getElementById("msg").innerHTML = message
+      document.querySelector("title").innerHTML += namme
+      function flash_it(){
+        document.getElementById("flash").classList.add("flashin")
+        setTimeout(function(){
+          conf()
+          document.getElementById("flash").classList.add("flashout");
+          document.getElementById("preempt").remove()
+          document.getElementById("postempt").style.display="block"
+        },400)
+      }
+      function conf() {
+          confetti();
+          confetti.reset();
+          var duration = 1000;
+          var animationEnd = Date.now() + duration;
+          var defaults = {
+              startVelocity: 50,
+              spread: 1000,
+              ticks: 1000,
+              zIndex: 0
+          };
+
+          function randomInRange(min, max) {
+              return Math.random() * (max - min) + min;
+          }
+
+          var interval = setInterval(function() {
+              var timeLeft = animationEnd - Date.now();
+
+              if (timeLeft <= 0) {
+                  return clearInterval(interval);
+              }
+
+              var particleCount = 200 * (timeLeft / duration);
+              // since particles fall down, start a bit higher than random
+              confetti(Object.assign({}, defaults, {
+                  particleCount,
+                  origin: {
+                      x: randomInRange(0.1, 0.3),
+                      y: Math.random() - 0.2
+                  }
+              }));
+              confetti(Object.assign({}, defaults, {
+                  particleCount,
+                  origin: {
+                      x: randomInRange(0.7, 0.9),
+                      y: Math.random() - 0.2
+                  }
+              }));
+          }, 250);
+
+      }
+    </script>
+  </body>
+</html>
